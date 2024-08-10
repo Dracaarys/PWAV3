@@ -32,3 +32,4 @@ public class Aluguel {
     )
     private List<Moto> motos;
 }
+//
