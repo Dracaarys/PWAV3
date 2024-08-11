@@ -23,6 +23,9 @@ public class Cliente {
     @Email(message = "O email deve ser válido.")
     private String email;
 
+    @NotBlank(message = "A senha não pode estar em branco.")
+    private String senha;  // Adicionando o campo senha
+
     @NotBlank(message = "O telefone não pode estar em branco.")
     private String telefone;
 
