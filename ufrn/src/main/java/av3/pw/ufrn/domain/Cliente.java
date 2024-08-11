@@ -1,4 +1,4 @@
-package domain;
+package av3.pw.ufrn.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
