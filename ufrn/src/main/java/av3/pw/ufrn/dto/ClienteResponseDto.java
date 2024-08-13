@@ -14,5 +14,5 @@ public class ClienteResponseDto extends RepresentationModel<ClienteResponseDto> 
     String nome;
     String telefone;
     Endereco endereco;
-    List<Aluguel> alugueis;
+    private List<AluguelDto> alugueis;
 }
