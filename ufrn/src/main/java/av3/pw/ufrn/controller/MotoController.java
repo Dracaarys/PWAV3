@@ -1,6 +1,5 @@
 package av3.pw.ufrn.controller;
 
-
 import av3.pw.ufrn.domain.Moto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +8,6 @@ import av3.pw.ufrn.service.MotoService;
 
 import java.util.List;
 import java.util.Optional;
-
 
 @RestController
 @RequestMapping("/api/motos")
