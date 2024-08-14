@@ -13,6 +13,6 @@ import av3.pw.ufrn.domain.*;
 public class ClienteResponseDto extends RepresentationModel<ClienteResponseDto> {
     String nome;
     String telefone;
-    Endereco endereco;
+    EnderecoDto endereco;
     private List<AluguelDto> alugueis;
 }
