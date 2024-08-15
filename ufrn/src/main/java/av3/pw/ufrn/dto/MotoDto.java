@@ -12,5 +12,4 @@ public class MotoDto {
     private String modelo;
     private String marca;
     private int ano;
-
 }

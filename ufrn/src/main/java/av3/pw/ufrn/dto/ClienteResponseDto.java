@@ -10,7 +10,7 @@ import org.springframework.hateoas.RepresentationModel;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ClienteResponseDto extends RepresentationModel<ClienteResponseDto> {
-    private Long id;  // Adiciona o campo id
+    private Long id; 
     private String nome;
     private String telefone;
     private EnderecoDto endereco;
