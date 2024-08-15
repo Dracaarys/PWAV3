@@ -1,48 +1,44 @@
 package av3.pw.ufrn.controller;
 
 import av3.pw.ufrn.domain.Endereco;
-import org.springframework.beans.factory.annotation.Autowired;
+import av3.pw.ufrn.service.EnderecoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import av3.pw.ufrn.service.EnderecoService;
+
+import lombok.AllArgsConstructor;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/enderecos")
+@AllArgsConstructor
 public class EnderecoController {
-    @Autowired
-    private EnderecoService enderecoService;
+
+    private final EnderecoService enderecoService;
 
     @GetMapping
-    public List<Endereco> listarEnderecos() {
-        return enderecoService.listarEnderecos();
+    public ResponseEntity<List<Endereco>> listarEnderecos() {
+        List<Endereco> enderecos = enderecoService.listarEnderecos();
+        return ResponseEntity.ok(enderecos);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Endereco> buscarEnderecoPorId(@PathVariable Long id) {
-        Optional<Endereco> endereco = enderecoService.buscarEnderecoPorId(id);
-        return endereco.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return enderecoService.buscarEnderecoPorId(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public Endereco criarEndereco(@RequestBody Endereco endereco) {
-        return enderecoService.salvarEndereco(endereco);
+    public ResponseEntity<Endereco> criarEndereco(@RequestBody Endereco endereco) {
+        Endereco enderecoSalvo = enderecoService.salvarEndereco(endereco);
+        return ResponseEntity.ok(enderecoSalvo);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Endereco> atualizarEndereco(@PathVariable Long id, @RequestBody Endereco enderecoAtualizado) {
-        return enderecoService.buscarEnderecoPorId(id)
-                .map(endereco -> {
-                    endereco.setRua(enderecoAtualizado.getRua());
-                    endereco.setCidade(enderecoAtualizado.getCidade());
-                    endereco.setEstado(enderecoAtualizado.getEstado());
-                    endereco.setCep(enderecoAtualizado.getCep());
-                    Endereco enderecoSalvo = enderecoService.salvarEndereco(endereco);
-                    return ResponseEntity.ok(enderecoSalvo);
-                })
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        Endereco enderecoAtualizadoSalvo = enderecoService.atualizarEndereco(id, enderecoAtualizado);
+        return ResponseEntity.ok(enderecoAtualizadoSalvo);
     }
 
     @DeleteMapping("/{id}")

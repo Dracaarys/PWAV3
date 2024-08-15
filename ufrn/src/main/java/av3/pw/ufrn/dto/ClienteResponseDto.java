@@ -5,14 +5,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.util.List;
 import org.springframework.hateoas.RepresentationModel;
-import av3.pw.ufrn.domain.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class ClienteResponseDto extends RepresentationModel<ClienteResponseDto> {
-    String nome;
-    String telefone;
-    EnderecoDto endereco;
+    private Long id;  // Adiciona o campo id
+    private String nome;
+    private String telefone;
+    private EnderecoDto endereco;
     private List<AluguelDto> alugueis;
 }

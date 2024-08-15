@@ -1,15 +1,16 @@
 package av3.pw.ufrn.service;
 
 import av3.pw.ufrn.domain.Moto;
+import av3.pw.ufrn.repository.MotoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import av3.pw.ufrn.repository.MotoRepository;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class MotoService {
+
     @Autowired
     private MotoRepository motoRepository;
 
@@ -28,5 +29,4 @@ public class MotoService {
     public void deletarMoto(Long id) {
         motoRepository.deleteById(id);
     }
-
 }

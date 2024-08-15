@@ -2,6 +2,7 @@ package av3.pw.ufrn.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,12 +24,12 @@ public class Moto {
     @NotBlank(message = "A marca não pode estar em branco.")
     private String marca;
 
-    @NotBlank(message = "O ano não pode estar em branco.")
+    @NotNull(message = "O ano não pode estar em branco.")
     private int ano;
     private boolean disponivel;
 
     @ManyToMany(mappedBy = "motos")
     private List<Aluguel> alugueis;
 
-    private boolean isDeleted = false;
+    //private boolean isDeleted = false;
 }
