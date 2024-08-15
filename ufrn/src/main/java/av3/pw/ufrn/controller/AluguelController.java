@@ -41,19 +41,9 @@ public class AluguelController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping
-    public ResponseEntity<AluguelDto> criarAluguel(@RequestBody AluguelDto aluguelDto) {
-        Aluguel aluguel = modelMapper.map(aluguelDto, Aluguel.class);
-
-        // Mapear manualmente MotoDto para Moto
-        if (aluguelDto.getMotos() != null) {
-            List<Moto> motos = aluguelDto.getMotos().stream()
-                    .map(motoDto -> modelMapper.map(motoDto, Moto.class))
-                    .collect(Collectors.toList());
-            aluguel.setMotos(motos);
-        }
-
-        Aluguel aluguelCriado = aluguelService.salvarAluguel(aluguel);
+    @PostMapping("/{usuarioId}")
+    public ResponseEntity<AluguelDto> criarAluguel(@PathVariable Long usuarioId, @RequestBody AluguelDto aluguelDto) {
+        Aluguel aluguelCriado = aluguelService.salvarAluguel(aluguelDto, usuarioId);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -65,7 +55,7 @@ public class AluguelController {
                 .body(modelMapper.map(aluguelCriado, AluguelDto.class));
     }
 
-    @PutMapping("/{id}")
+    /*@PutMapping("/{id}")
     public ResponseEntity<AluguelDto> atualizarAluguel(@PathVariable Long id, @RequestBody AluguelDto aluguelDto) {
         return aluguelService.buscarAluguelPorId(id)
                 .map(aluguelExistente -> {
@@ -84,7 +74,7 @@ public class AluguelController {
                     return ResponseEntity.ok(modelMapper.map(aluguelAtualizado, AluguelDto.class));
                 })
                 .orElseGet(() -> ResponseEntity.notFound().build());
-    }
+    }*/
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
