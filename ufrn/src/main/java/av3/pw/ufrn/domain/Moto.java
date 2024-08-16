@@ -1,5 +1,6 @@
 package av3.pw.ufrn.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -31,5 +32,5 @@ public class Moto {
     @ManyToMany(mappedBy = "motos")
     private List<Aluguel> alugueis;
 
-    //private boolean isDeleted = false;
+    // private boolean isDeleted = false;
 }

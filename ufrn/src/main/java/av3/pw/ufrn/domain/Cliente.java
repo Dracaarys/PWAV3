@@ -1,5 +1,6 @@
 package av3.pw.ufrn.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -24,7 +25,7 @@ public class Cliente {
     private String email;
 
     @NotBlank(message = "A senha não pode estar em branco.")
-    private String senha; 
+    private String senha;
 
     @NotBlank(message = "O telefone não pode estar em branco.")
     private String telefone;

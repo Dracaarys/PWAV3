@@ -1,11 +1,8 @@
 package av3.pw.ufrn.controller;
 
 import av3.pw.ufrn.domain.Aluguel;
-import av3.pw.ufrn.domain.Moto;
 import av3.pw.ufrn.dto.AluguelDto;
-import av3.pw.ufrn.dto.MotoDto;
 import av3.pw.ufrn.service.AluguelService;
-import av3.pw.ufrn.service.MotoService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -23,7 +20,6 @@ import java.util.stream.Collectors;
 public class AluguelController {
 
     private final AluguelService aluguelService;
-    private final MotoService motoService;
     private final ModelMapper modelMapper;
 
     @GetMapping
@@ -41,40 +37,12 @@ public class AluguelController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/{usuarioId}")
-    public ResponseEntity<AluguelDto> criarAluguel(@PathVariable Long usuarioId, @RequestBody AluguelDto aluguelDto) {
-        Aluguel aluguelCriado = aluguelService.salvarAluguel(aluguelDto, usuarioId);
-
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(aluguelCriado.getId())
-                .toUri();
-
-        return ResponseEntity.created(location)
-                .body(modelMapper.map(aluguelCriado, AluguelDto.class));
+    @PostMapping("/{clienteId}")
+    public ResponseEntity<Aluguel> createAluguel(@PathVariable Long clienteId, @RequestBody Aluguel aluguel) {
+        Aluguel savedAluguel = aluguelService.save(clienteId, aluguel);
+        return ResponseEntity.ok(savedAluguel);
     }
 
-    /*@PutMapping("/{id}")
-    public ResponseEntity<AluguelDto> atualizarAluguel(@PathVariable Long id, @RequestBody AluguelDto aluguelDto) {
-        return aluguelService.buscarAluguelPorId(id)
-                .map(aluguelExistente -> {
-                    aluguelExistente.setDataInicio(aluguelDto.getDataInicio());
-                    aluguelExistente.setDataFim(aluguelDto.getDataFim());
-
-                    // Mapear manualmente MotoDto para Moto
-                    if (aluguelDto.getMotos() != null) {
-                        List<Moto> motos = aluguelDto.getMotos().stream()
-                                .map(motoDto -> modelMapper.map(motoDto, Moto.class))
-                                .collect(Collectors.toList());
-                        aluguelExistente.setMotos(motos);
-                    }
-
-                    Aluguel aluguelAtualizado = aluguelService.salvarAluguel(aluguelExistente);
-                    return ResponseEntity.ok(modelMapper.map(aluguelAtualizado, AluguelDto.class));
-                })
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }*/
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

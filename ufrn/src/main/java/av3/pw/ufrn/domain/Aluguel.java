@@ -1,20 +1,19 @@
 package av3.pw.ufrn.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
-import av3.pw.ufrn.dto.MotoDto;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Getter
+@Setter
 public class Aluguel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -37,5 +36,5 @@ public class Aluguel {
             inverseJoinColumns = @JoinColumn(name = "moto_id")
     )
     private List<Moto> motos;
+
 }
-//
