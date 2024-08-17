@@ -20,22 +20,29 @@ public class ClienteService {
     private final ClienteRepository clienteRepository;
     private final ModelMapper mapper;
 
+    // Adiciona links HATEOAS ao DTO
+    private ClienteResponseDto convertToDto(Cliente cliente) {
+        ClienteResponseDto clienteResponseDto = mapper.map(cliente, ClienteResponseDto.class);
+        clienteResponseDto.addLinks(cliente);
+        return clienteResponseDto;
+    }
+
     public List<ClienteResponseDto> listarClientes() {
         return clienteRepository.findAll().stream()
-                .map(cliente -> mapper.map(cliente, ClienteResponseDto.class))
+                .map(this::convertToDto) // Usa o método convertToDto para adicionar links
                 .collect(Collectors.toList());
     }
 
     public ClienteResponseDto buscarClientePorId(Long id) {
         Cliente cliente = clienteRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Cliente id " + id + " não encontrado"));
-        return mapper.map(cliente, ClienteResponseDto.class);
+        return convertToDto(cliente); // Usa o método convertToDto para adicionar links
     }
 
     public ClienteResponseDto salvarCliente(ClienteRequestDto clienteRequestDTO) {
         Cliente cliente = mapper.map(clienteRequestDTO, Cliente.class);
         Cliente savedCliente = clienteRepository.save(cliente);
-        return mapper.map(savedCliente, ClienteResponseDto.class);
+        return convertToDto(savedCliente); // Usa o método convertToDto para adicionar links
     }
 
     public ClienteResponseDto atualizarCliente(Long id, ClienteRequestDto clienteRequestDTO) {
@@ -43,7 +50,7 @@ public class ClienteService {
                 .orElseThrow(() -> new EntityNotFoundException("Cliente id " + id + " não encontrado"));
         mapper.map(clienteRequestDTO, cliente);
         Cliente updatedCliente = clienteRepository.save(cliente);
-        return mapper.map(updatedCliente, ClienteResponseDto.class);
+        return convertToDto(updatedCliente); // Usa o método convertToDto para adicionar links
     }
 
     public void deletarCliente(Long id) {
@@ -52,3 +59,4 @@ public class ClienteService {
         clienteRepository.delete(cliente);
     }
 }
+

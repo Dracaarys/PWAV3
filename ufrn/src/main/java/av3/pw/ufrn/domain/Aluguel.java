@@ -27,6 +27,7 @@ public class Aluguel {
 
     @ManyToOne
     @JoinColumn(name = "cliente_id")
+    @JsonIgnore
     private Cliente cliente;
 
     @ManyToMany
