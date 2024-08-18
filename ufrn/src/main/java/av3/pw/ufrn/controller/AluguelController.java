@@ -26,23 +26,37 @@ public class AluguelController {
     public List<AluguelDto> listarAlugueis() {
         List<Aluguel> alugueis = aluguelService.listarAlugueis();
         return alugueis.stream()
-                .map(aluguel -> modelMapper.map(aluguel, AluguelDto.class))
+                .map(aluguel -> {
+                    AluguelDto aluguelDto = modelMapper.map(aluguel, AluguelDto.class);
+                    aluguelDto.addLinks(aluguel); // Adiciona links ao DTO
+                    return aluguelDto;
+                })
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<AluguelDto> buscarAluguelPorId(@PathVariable Long id) {
         return aluguelService.buscarAluguelPorId(id)
-                .map(aluguel -> ResponseEntity.ok(modelMapper.map(aluguel, AluguelDto.class)))
+                .map(aluguel -> {
+                    AluguelDto aluguelDto = modelMapper.map(aluguel, AluguelDto.class);
+                    aluguelDto.addLinks(aluguel); // Adiciona links ao DTO
+                    return ResponseEntity.ok(aluguelDto);
+                })
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/{clienteId}")
-    public ResponseEntity<Aluguel> createAluguel(@PathVariable Long clienteId, @RequestBody Aluguel aluguel) {
+    public ResponseEntity<AluguelDto> createAluguel(@PathVariable Long clienteId, @RequestBody Aluguel aluguel) {
         Aluguel savedAluguel = aluguelService.save(clienteId, aluguel);
-        return ResponseEntity.ok(savedAluguel);
+        AluguelDto savedAluguelDto = modelMapper.map(savedAluguel, AluguelDto.class);
+        savedAluguelDto.addLinks(savedAluguel); // Adiciona links ao DTO
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(savedAluguelDto.getId())
+                .toUri();
+        return ResponseEntity.created(location).body(savedAluguelDto);
     }
-
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

@@ -6,11 +6,19 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@SQLDelete(sql = "UPDATE Endereco SET deleted_at = CURRENT_TIMESTAMP where id=?")
+@SQLRestriction("deleted_at is null")
 public class Endereco {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -31,4 +39,11 @@ public class Endereco {
     @OneToOne(mappedBy = "endereco")
     @JsonIgnore
     private Cliente cliente;
+
+    @CreationTimestamp
+    LocalDateTime createdAt;
+    @UpdateTimestamp
+    LocalDateTime updatedAt;
+
+    LocalDateTime deletedAt;
 }

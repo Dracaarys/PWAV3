@@ -24,8 +24,7 @@ public class MotoController {
 
     @GetMapping
     public List<MotoDto> listarMotos() {
-        List<Moto> motos = motoService.listarMotos();
-        return motos.stream()
+        return motoService.listarMotos().stream()
                 .map(moto -> modelMapper.map(moto, MotoDto.class))
                 .collect(Collectors.toList());
     }
@@ -38,18 +37,16 @@ public class MotoController {
     }
 
     @PostMapping
-    public ResponseEntity<MotoDto> criarMoto(@RequestBody MotoDto motoDto) {
+    public ResponseEntity<MotoDto> createMoto(@RequestBody MotoDto motoDto) {
         Moto moto = modelMapper.map(motoDto, Moto.class);
-        Moto motoCriada = motoService.salvarMoto(moto);
-
+        Moto savedMoto = motoService.salvarMoto(moto);
+        MotoDto savedMotoDto = modelMapper.map(savedMoto, MotoDto.class);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(motoCriada.getId())
+                .buildAndExpand(savedMotoDto.getId())
                 .toUri();
-
-        return ResponseEntity.created(location)
-                .body(modelMapper.map(motoCriada, MotoDto.class));
+        return ResponseEntity.created(location).body(savedMotoDto);
     }
 
     @PutMapping("/{id}")
