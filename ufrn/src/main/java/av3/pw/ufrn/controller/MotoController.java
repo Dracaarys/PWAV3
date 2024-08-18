@@ -5,6 +5,7 @@ import av3.pw.ufrn.dto.MotoDto;
 import av3.pw.ufrn.service.MotoService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +28,15 @@ public class MotoController {
         return motoService.listarMotos().stream()
                 .map(moto -> modelMapper.map(moto, MotoDto.class))
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/page")
+    public ResponseEntity<Page<MotoDto>> listarMotosPaginadas(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<Moto> motosPage = motoService.listarMotosPaginadas(page, size);
+        Page<MotoDto> motoDtosPage = motosPage.map(moto -> modelMapper.map(moto, MotoDto.class));
+        return ResponseEntity.ok(motoDtosPage);
     }
 
     @GetMapping("/{id}")
