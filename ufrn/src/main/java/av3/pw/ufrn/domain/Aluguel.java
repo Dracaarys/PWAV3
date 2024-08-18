@@ -8,12 +8,19 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.annotations.UpdateTimestamp;
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Getter
 @Setter
+@SQLDelete(sql = "UPDATE Aluguel SET deleted_at = CURRENT_TIMESTAMP where id=?")
+@SQLRestriction("deleted_at is null")
 public class Aluguel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -38,4 +45,10 @@ public class Aluguel {
     )
     private List<Moto> motos;
 
+    @CreationTimestamp
+    LocalDateTime createdAt;
+    @UpdateTimestamp
+    LocalDateTime updatedAt;
+
+    LocalDateTime deletedAt;
 }
