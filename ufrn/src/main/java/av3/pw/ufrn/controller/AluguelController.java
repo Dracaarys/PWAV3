@@ -5,10 +5,12 @@ import av3.pw.ufrn.dto.AluguelDto;
 import av3.pw.ufrn.service.AluguelService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.cglib.core.Local;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 
 import java.net.URI;
 import java.util.List;
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/aluguel")
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 public class AluguelController {
 
     private final AluguelService aluguelService;
