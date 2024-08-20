@@ -45,7 +45,7 @@ public class Cliente {
     @OneToMany(mappedBy = "cliente")
     private List<Aluguel> alugueis;
 
-    private boolean isAdmin = false;
+    boolean isAdmin = false;
 
     @CreationTimestamp
     LocalDateTime createdAt;
