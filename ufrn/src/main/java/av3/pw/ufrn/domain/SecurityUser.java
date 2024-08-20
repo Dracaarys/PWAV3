@@ -25,7 +25,7 @@ import java.util.Collections;
 public class SecurityUser extends AbstractEntity implements UserDetails{
     @OneToOne(cascade = CascadeType.ALL)
     @MapsId
-    @JoinColumn(name = "pessoa_id")
+    @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
     @Column(unique = true)

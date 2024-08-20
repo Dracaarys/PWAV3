@@ -4,7 +4,7 @@ import av3.pw.ufrn.core.security.RsaKeyProperties;
 import av3.pw.ufrn.domain.Cliente;
 import av3.pw.ufrn.domain.Endereco;
 import av3.pw.ufrn.domain.SecurityUser;
-import av3.pw.ufrn.repository.SecurityUserRerpository;
+import av3.pw.ufrn.repository.SecurityUserRepository;
 import jakarta.annotation.PostConstruct;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class UfrnApplication {
     };
 
 	@Autowired
-	SecurityUserRerpository securityUserRerpository;
+	SecurityUserRepository securityUserRerpository;
 
 	@Autowired
 	BCryptPasswordEncoder encoder;
