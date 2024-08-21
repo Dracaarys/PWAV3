@@ -26,14 +26,14 @@ public class Cliente {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotBlank(message = "O nome do cliente não pode estar em branco.")
+//    @NotBlank(message = "O nome do cliente não pode estar em branco.")
     private String nome;
 
-    @Email(message = "O email deve ser válido.")
+//    @Email(message = "O email deve ser válido.")
     private String email;
 
-    @NotBlank(message = "A senha não pode estar em branco.")
-    private String senha;
+//    @NotBlank(message = "A senha não pode estar em branco.")
+//    private String senha;
 
     @NotBlank(message = "O telefone não pode estar em branco.")
     private String telefone;

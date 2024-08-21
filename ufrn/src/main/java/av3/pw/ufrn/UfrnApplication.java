@@ -39,6 +39,8 @@ public class UfrnApplication {
 		Cliente p = new Cliente();
 
 		p.setNome("Joao");
+		p.setTelefone("123456789");
+		p.setEmail("joao@gmail.com");
 		p.setAdmin(true);
 
 
@@ -53,7 +55,7 @@ public class UfrnApplication {
 
 		SecurityUser securityUser = new SecurityUser();
 		securityUser.setCliente(p);
-		securityUser.setEmail("admin@gmail.com");
+		securityUser.setEmail("admin");
 		securityUser.setPassword(encoder.encode("admin"));
 
 		securityUserRerpository.save(securityUser);
