@@ -1,5 +1,6 @@
 package av3.pw.ufrn.core.security;
 
+import av3.pw.ufrn.repository.ClienteRepository;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -16,8 +17,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
@@ -39,51 +43,63 @@ public class SecurityConfig {
             "/actuator/*",
             "/swagger-ui/**",
             "/token",
-            "/credenciais"
+            "/credenciais",
+            "/auth/**",
+
     };
 
     private final RsaKeyProperties rsaKeys;
 
-    public SecurityConfig(RsaKeyProperties rsaKeys) {
+    private final ClienteRepository repository;
+
+    public SecurityConfig(RsaKeyProperties rsaKeys, ClienteRepository repository) {
         this.rsaKeys = rsaKeys;
+        this.repository = repository;
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService, BCryptPasswordEncoder encoder){
+    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService/*, BCryptPasswordEncoder encoder*/){
         var authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(encoder);
+        authProvider.setPasswordEncoder(passwordEncoder());
         return new ProviderManager(authProvider);
     }
 
+    @Bean
+    public UserDetailsService users() {
+        return email -> (UserDetails) repository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario nao existe"));
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers(AUTH_WHITELIST).permitAll();
-                    auth.anyRequest().authenticated();
-                } )
-                .oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults()))
+                .csrf(AbstractHttpConfigurer::disable).cors(Customizer.withDefaults())
+                .authorizeHttpRequests( auth -> {
+                            auth.requestMatchers(AUTH_WHITELIST).permitAll();
+                            auth.anyRequest().authenticated();
+                        }
+                )
+                .oauth2ResourceServer( oauth2 -> oauth2.jwt(Customizer.withDefaults()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                //.httpBasic(Customizer.withDefaults())
                 .build();
     }
 
     @Bean
-    JwtDecoder jwtDecoder(){
+    public PasswordEncoder passwordEncoder(){
+        return  new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    JwtDecoder jwtDecoder() {
         return NimbusJwtDecoder.withPublicKey(rsaKeys.publicKey()).build();
     }
 
     @Bean
-    JwtEncoder jwtEncoder(){
+    JwtEncoder jwtEncoder() {
         JWK jwk = new RSAKey.Builder(rsaKeys.publicKey()).privateKey(rsaKeys.privateKey()).build();
         JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
         return new NimbusJwtEncoder(jwks);
-    }
-
-    @Bean
-    public BCryptPasswordEncoder encoder(){
-        return new BCryptPasswordEncoder();
     }
 }

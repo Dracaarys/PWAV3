@@ -1,32 +1,44 @@
 package av3.pw.ufrn.service.security;
 
-import av3.pw.ufrn.domain.SecurityUser;
-import av3.pw.ufrn.repository.SecurityUserRepository;
-import lombok.AllArgsConstructor;
+import av3.pw.ufrn.core.security.AuthenticationResponse;
+import av3.pw.ufrn.core.security.RegisterRequest;
+import av3.pw.ufrn.domain.Cliente;
+import av3.pw.ufrn.domain.Role;
+import av3.pw.ufrn.repository.ClienteRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
-import java.util.Optional;
 
 @Service
-@AllArgsConstructor
-public class AuthenticationService implements UserDetailsService {
+@RequiredArgsConstructor
+public class AuthenticationService {
+    private final AuthenticationManager authenticationManager;
 
-    SecurityUserRepository repository;
-    BCryptPasswordEncoder encoder;
+    private final ClienteRepository repository;
 
-    @Override
-    public UserDetails loadUserByUsername(String Email) throws UsernameNotFoundException {
-        Optional<SecurityUser> credencials = Optional.ofNullable(repository.findByEmail(Email));
+    private final TokenService tokenService;
 
-        if(credencials.isPresent()){
-            return credencials.get();
-        } else {
-            throw new UsernameNotFoundException("Usuário não cadastrado com email: " + Email);
-        }
+    private final PasswordEncoder passwordEncoder;
+
+
+    public AuthenticationResponse register(RegisterRequest request){
+        var cliente = Cliente.builder()
+                .nome(request.getNome())
+                .email(request.getEmail())
+                .senha(request.getSenha())
+                .senha(passwordEncoder.encode(request.getSenha()))
+                .role(Role.USER)
+                .build();
+
+
+        repository.save(cliente);
+        var token =  tokenService.generateToken((UserDetails) cliente).toString();
+        return AuthenticationResponse.builder().token(token).build();
+
     }
+
 }
