@@ -44,7 +44,7 @@ public class AuthController {
 
         return tokenService.generateToken((UserDetails) repository.findByEmail(loginDTO.email()).orElseThrow());
     }
-
+//'
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request){
