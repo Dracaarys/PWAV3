@@ -61,4 +61,25 @@ public class AluguelService {
     }
 
 
+    public Aluguel atualizarAluguel(Long id, Aluguel aluguelAtualizado) {
+        Aluguel aluguelExistente = aluguelRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Aluguel id " + id + " não encontrado"));
+    
+        aluguelExistente.setDataInicio(aluguelAtualizado.getDataInicio());
+        aluguelExistente.setDataFim(aluguelAtualizado.getDataFim());
+        aluguelExistente.setMotos(aluguelAtualizado.getMotos());
+ 
+        if (aluguelAtualizado.getMotos() != null) {
+            for (Moto moto : aluguelAtualizado.getMotos()) {
+                Moto motoExistente = motoRepository.findById(moto.getId())
+                        .orElseThrow(() -> new RuntimeException("Moto não encontrada"));
+                motoExistente.setDisponivel(false);
+                motoRepository.save(motoExistente);
+            }
+        }
+
+        Aluguel aluguelSalvo = aluguelRepository.save(aluguelExistente);
+    
+        return aluguelSalvo;
+    }
 }

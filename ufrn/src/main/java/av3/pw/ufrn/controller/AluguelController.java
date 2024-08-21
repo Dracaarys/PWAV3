@@ -61,6 +61,16 @@ public class AluguelController {
         return ResponseEntity.created(location).body(savedAluguelDto);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<AluguelDto> atualizarAluguel(@PathVariable Long id, @RequestBody AluguelDto aluguelDto) {
+        Aluguel aluguelAtualizado = modelMapper.map(aluguelDto, Aluguel.class);
+        Aluguel aluguelSalvo = aluguelService.atualizarAluguel(id, aluguelAtualizado);
+        AluguelDto aluguelSalvoDto = modelMapper.map(aluguelSalvo, AluguelDto.class);
+
+        aluguelSalvoDto.addLinks(aluguelSalvo);
+        return ResponseEntity.ok(aluguelSalvoDto);
+    }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletarAluguel(@PathVariable Long id) {
