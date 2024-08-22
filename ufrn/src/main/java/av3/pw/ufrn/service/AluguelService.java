@@ -38,27 +38,44 @@ public class AluguelService {
     }
     @Transactional
     public Aluguel save(Long clienteId, Aluguel aluguel) {
-        // Recupera o cliente
         Cliente cliente = clienteRepository.findById(clienteId)
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
 
-        // Atualiza as motos
         List<Moto> motos = aluguel.getMotos();
         if (motos != null) {
             for (Moto moto : motos) {
                 Moto foundMoto = motoRepository.findById(moto.getId())
                         .orElseThrow(() -> new RuntimeException("Moto não encontrada"));
-                foundMoto.setDisponivel(false); // ou qualquer lógica de atualização
+                foundMoto.setDisponivel(false); 
                 motoRepository.save(foundMoto);
             }
         }
 
-        // Associa o cliente ao aluguel
         aluguel.setCliente(cliente);
 
-        // Salva o aluguel
         return aluguelRepository.save(aluguel);
     }
 
+    public Aluguel atualizarAluguel(Long id, Aluguel aluguelAtualizado) {
+        Aluguel aluguelExistente = aluguelRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Aluguel id " + id + " não encontrado"));
+    
+        aluguelExistente.setDataInicio(aluguelAtualizado.getDataInicio());
+        aluguelExistente.setDataFim(aluguelAtualizado.getDataFim());
+        aluguelExistente.setMotos(aluguelAtualizado.getMotos());
+
+        if (aluguelAtualizado.getMotos() != null) {
+            for (Moto moto : aluguelAtualizado.getMotos()) {
+                Moto motoExistente = motoRepository.findById(moto.getId())
+                        .orElseThrow(() -> new RuntimeException("Moto não encontrada"));
+                motoExistente.setDisponivel(false); 
+                motoRepository.save(motoExistente);
+            }
+        }
+
+        Aluguel aluguelSalvo = aluguelRepository.save(aluguelExistente);
+    
+        return aluguelSalvo;
+    }
 
 }
