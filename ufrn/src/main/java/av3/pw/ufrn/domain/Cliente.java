@@ -35,7 +35,7 @@ public class Cliente {
     @NotBlank(message = "A senha não pode estar em branco.")
     private String senha;
 
-    @NotBlank(message = "O telefone não pode estar em branco.")
+//    @NotBlank(message = "O telefone não pode estar em branco.")
     private String telefone;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
