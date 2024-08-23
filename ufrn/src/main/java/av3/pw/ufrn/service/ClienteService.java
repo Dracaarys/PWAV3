@@ -20,7 +20,6 @@ public class ClienteService {
     private final ClienteRepository clienteRepository;
     private final ModelMapper mapper;
 
-    // Adiciona links HATEOAS ao DTO
     private ClienteResponseDto convertToDto(Cliente cliente) {
         ClienteResponseDto clienteResponseDto = mapper.map(cliente, ClienteResponseDto.class);
         clienteResponseDto.addLinks(cliente);
@@ -29,20 +28,20 @@ public class ClienteService {
 
     public List<ClienteResponseDto> listarClientes() {
         return clienteRepository.findAll().stream()
-                .map(this::convertToDto) // Usa o método convertToDto para adicionar links
+                .map(this::convertToDto) 
                 .collect(Collectors.toList());
     }
 
     public ClienteResponseDto buscarClientePorId(Long id) {
         Cliente cliente = clienteRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Cliente id " + id + " não encontrado"));
-        return convertToDto(cliente); // Usa o método convertToDto para adicionar links
+        return convertToDto(cliente);
     }
 
     public ClienteResponseDto salvarCliente(ClienteRequestDto clienteRequestDTO) {
         Cliente cliente = mapper.map(clienteRequestDTO, Cliente.class);
         Cliente savedCliente = clienteRepository.save(cliente);
-        return convertToDto(savedCliente); // Usa o método convertToDto para adicionar links
+        return convertToDto(savedCliente);
     }
 
     public ClienteResponseDto atualizarCliente(Long id, ClienteRequestDto clienteRequestDTO) {
@@ -50,7 +49,7 @@ public class ClienteService {
                 .orElseThrow(() -> new EntityNotFoundException("Cliente id " + id + " não encontrado"));
         mapper.map(clienteRequestDTO, cliente);
         Cliente updatedCliente = clienteRepository.save(cliente);
-        return convertToDto(updatedCliente); // Usa o método convertToDto para adicionar links
+        return convertToDto(updatedCliente);
     }
 
     public void deletarCliente(Long id) {

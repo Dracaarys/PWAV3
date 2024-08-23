@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/enderecos")
 @AllArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
 public class EnderecoController {
 
     private final EnderecoService enderecoService;

@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/clientes")
 @AllArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
 public class ClienteController {
 
     private final ClienteService service;
@@ -27,7 +27,7 @@ public class ClienteController {
 
     @GetMapping
     public List<ClienteResponseDto> listAll() {
-        return service.listarClientes(); // O serviço já adiciona os links HATEOAS
+        return service.listarClientes(); 
     }
 
     @PostMapping

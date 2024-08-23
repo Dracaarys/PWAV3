@@ -34,7 +34,7 @@ public class Moto {
 
     @NotNull(message = "O ano não pode estar em branco.")
     private int ano;
-    private boolean disponivel;
+    private boolean disponivel = true;
 
     @ManyToMany(mappedBy = "motos")
     private List<Aluguel> alugueis;

@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/aluguel")
 @AllArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
 public class AluguelController {
 
     private final AluguelService aluguelService;
@@ -31,7 +31,7 @@ public class AluguelController {
         return alugueis.stream()
                 .map(aluguel -> {
                     AluguelDto aluguelDto = modelMapper.map(aluguel, AluguelDto.class);
-                    aluguelDto.addLinks(aluguel); // Adiciona links ao DTO
+                    aluguelDto.addLinks(aluguel);
                     return aluguelDto;
                 })
                 .collect(Collectors.toList());
@@ -42,7 +42,7 @@ public class AluguelController {
         return aluguelService.buscarAluguelPorId(id)
                 .map(aluguel -> {
                     AluguelDto aluguelDto = modelMapper.map(aluguel, AluguelDto.class);
-                    aluguelDto.addLinks(aluguel); // Adiciona links ao DTO
+                    aluguelDto.addLinks(aluguel);
                     return ResponseEntity.ok(aluguelDto);
                 })
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -52,7 +52,7 @@ public class AluguelController {
     public ResponseEntity<AluguelDto> createAluguel(@PathVariable Long clienteId, @RequestBody Aluguel aluguel) {
         Aluguel savedAluguel = aluguelService.save(clienteId, aluguel);
         AluguelDto savedAluguelDto = modelMapper.map(savedAluguel, AluguelDto.class);
-        savedAluguelDto.addLinks(savedAluguel); // Adiciona links ao DTO
+        savedAluguelDto.addLinks(savedAluguel);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")

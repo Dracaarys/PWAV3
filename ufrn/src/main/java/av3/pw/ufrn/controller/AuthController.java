@@ -21,7 +21,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
 public class AuthController {
     private final ClienteRepository repository;
     private final PasswordEncoder passwordEncoder;
